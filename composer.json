@@ -1,0 +1,24 @@
+{
+  "name": "kettari/amber-client-api-bundle",
+  "type": "symfony-bundle",
+  "description": "Amber ClientApiBundle",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Andrei Kornienko",
+      "email": "ant@kaula.ru",
+      "homepage": "https://github.com/kettari"
+    }
+  ],
+  "require": {
+    "php": ">=7.0.0",
+    "psr/log": "^1.0",
+    "psr/http-message": "^1.0",
+    "guzzlehttp/guzzle": "^6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Amber\\ClientApiBundle\\": ""
+    }
+  }
+}

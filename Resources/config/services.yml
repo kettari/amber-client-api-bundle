@@ -1,0 +1,4 @@
+services:
+    amber_client_api:
+        class: Amber\ClientApiBundlle\AmberClientApi
+        arguments: ['@service_container']
