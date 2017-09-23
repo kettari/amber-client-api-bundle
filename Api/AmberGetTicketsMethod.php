@@ -3,7 +3,7 @@
 namespace Amber\ClientApiBundle\Api;
 
 
-class AmberGetOrdersMethod extends AbstractAmberMethod implements AmberSecuredEndpointInterface
+class AmberGetTicketsMethod extends AbstractAmberMethod implements AmberSecuredEndpointInterface
 {
   /**
    * @var string
@@ -17,7 +17,7 @@ class AmberGetOrdersMethod extends AbstractAmberMethod implements AmberSecuredEn
    */
   public function getUri(): string
   {
-    return '/api/v1/orders';
+    return '/api/v1/tickets';
   }
 
   /**

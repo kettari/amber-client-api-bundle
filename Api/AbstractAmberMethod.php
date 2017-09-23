@@ -21,7 +21,7 @@ abstract class AbstractAmberMethod implements AmberMethodInterface
   /**
    * @var array
    */
-  protected $jsonData;
+  protected $jsonData = [];
 
   /**
    * @return ResponseInterface

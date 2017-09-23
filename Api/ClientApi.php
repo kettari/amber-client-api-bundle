@@ -21,14 +21,19 @@ class ClientApi
   private $logger;
 
   /**
-   * @var array
+   * @var string
    */
-  private $cookies = [];
+  private $phone;
 
   /**
    * @var string
    */
   private $serviceKey;
+
+  /**
+   * @var bool
+   */
+  private $authenticated = false;
 
   /**
    * ClientApi constructor.
@@ -54,7 +59,6 @@ class ClientApi
 
     // Does endpoint secured?
     if ($method instanceof AmberSecuredEndpointInterface) {
-      // Check authentication. If false, try to authenticate
       if (!$this->isAuthenticated()) {
         $this->authenticate();
       }
@@ -79,10 +83,12 @@ class ClientApi
         'method'  => $method->getMethod(),
         'uri'     => $method->getUri(),
         'options' => $options,
+        'config'  => $this->client->getConfig(),
       ]
     );
 
     // Make request
+    $response = null;
     try {
       $response = $this->client->request(
         $method->getMethod(),
@@ -96,7 +102,21 @@ class ClientApi
           ->getContents(), 0, $e
       );
     } catch (\Exception $e) {
-      throw new ClientApiException('Guzzle request failed.', 0, $e);
+      throw new ClientApiException(
+        sprintf(
+          'Guzzle request failed with exception %s: %s',
+          get_class($e),
+          $e->getMessage()
+        ), 0, $e
+      );
+    } finally {
+      $this->logger->debug(
+        'Guzzle response: {code} {message}',
+        [
+          'code'    => $response ? $response->getStatusCode() : 'n/a',
+          'message' => $response ? $response->getReasonPhrase() : 'n/a',
+        ]
+      );
     }
     // Assign response
     $method->setHttpResponse($response);
@@ -109,6 +129,12 @@ class ClientApi
    */
   private function isAuthenticated()
   {
+    if ($this->authenticated) {
+      $this->logger->debug('Already authenticated');
+
+      return true;
+    }
+
     $getAuthMethod = new AmberCheckAuthenticationMethod();
     $this->execute($getAuthMethod);
     $authentication = $getAuthMethod->getResult();
@@ -130,7 +156,11 @@ class ClientApi
   private function authenticate()
   {
     $this->logger->debug('About to authenticate at the Amber');
-    $this->execute(new AmberAuthenticateMethod());
+    $doAuthMethod = new AmberAuthenticateMethod();
+    $doAuthMethod->setPhone($this->phone)
+      ->setServiceKey($this->serviceKey);
+    $this->execute($doAuthMethod);
+    $this->authenticated = true;
   }
 
   /**
@@ -146,26 +176,31 @@ class ClientApi
   }
 
   /**
-   * Adds cookie to internal storage. Will be sent with requests.
-   *
-   * @param string $name
-   * @param string $value
-   * @return \Amber\ClientApiBundle\Api\ClientApi
-   */
-  public function addCookie($name, $value)
-  {
-    $this->cookies[$name] = $value;
-
-    return $this;
-  }
-
-  /**
    * @param string $serviceKey
    * @return \Amber\ClientApiBundle\Api\ClientApi
    */
   public function setServiceKey(string $serviceKey): ClientApi
   {
     $this->serviceKey = $serviceKey;
+
+    return $this;
+  }
+
+  /**
+   * @return string
+   */
+  public function getPhone(): string
+  {
+    return $this->phone;
+  }
+
+  /**
+   * @param string $phone
+   * @return \Amber\ClientApiBundle\Api\ClientApi
+   */
+  public function setPhone(string $phone): ClientApi
+  {
+    $this->phone = $phone;
 
     return $this;
   }
