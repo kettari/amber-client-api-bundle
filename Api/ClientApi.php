@@ -96,6 +96,7 @@ class ClientApi
         $options
       );
     } catch (RequestException $e) {
+      $method->setHttpResponse($e->getResponse());
       throw new ClientApiException(
         'Guzzle request failed: '.$e->getResponse()
           ->getBody()
