@@ -3,6 +3,7 @@
 namespace Amber\ClientApiBundle\Api;
 
 use Amber\ClientApiBundle\Exception\ClientApiException;
+use Amber\ClientApiBundle\Exception\RequestApiException;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Log\LoggerInterface;
@@ -97,7 +98,7 @@ class ClientApi
       );
     } catch (RequestException $e) {
       $method->setHttpResponse($e->getResponse());
-      throw new ClientApiException(
+      throw new RequestApiException(
         'Guzzle request failed: '.$e->getResponse()
           ->getBody()
           ->getContents(), 0, $e
