@@ -9,7 +9,7 @@
 namespace Amber\ClientApiBundle\Api;
 
 
-class AmberAuthenticateMethod extends AbstractAmberMethod
+class AmberRegisterUserMethod extends AbstractAmberMethod
 {
   /**
    * @var string
@@ -28,7 +28,7 @@ class AmberAuthenticateMethod extends AbstractAmberMethod
    */
   public function getUri(): string
   {
-    return '/api/v1/account/authentication';
+    return '/api/v1/account/registration';
   }
 
   /**
@@ -61,9 +61,9 @@ class AmberAuthenticateMethod extends AbstractAmberMethod
 
   /**
    * @param string $phone
-   * @return \Amber\ClientApiBundle\Api\AmberAuthenticateMethod
+   * @return \Amber\ClientApiBundle\Api\AmberRegisterUserMethod
    */
-  public function setPhone(string $phone): AmberAuthenticateMethod
+  public function setPhone(string $phone): AmberRegisterUserMethod
   {
     $this->phone = $phone;
 
@@ -80,9 +80,9 @@ class AmberAuthenticateMethod extends AbstractAmberMethod
 
   /**
    * @param string $serviceKey
-   * @return \Amber\ClientApiBundle\Api\AmberAuthenticateMethod
+   * @return \Amber\ClientApiBundle\Api\AmberRegisterUserMethod
    */
-  public function setServiceKey(string $serviceKey): AmberAuthenticateMethod
+  public function setServiceKey(string $serviceKey): AmberRegisterUserMethod
   {
     $this->serviceKey = $serviceKey;
 

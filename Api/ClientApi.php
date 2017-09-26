@@ -156,7 +156,7 @@ class ClientApi
   private function authenticate()
   {
     $this->logger->debug('About to authenticate at the Amber');
-    $doAuthMethod = new AmberAuthenticateMethod();
+    $doAuthMethod = new AmberAuthenticateUserMethod();
     $doAuthMethod->setPhone($this->phone)
       ->setServiceKey($this->serviceKey);
     $this->execute($doAuthMethod);
